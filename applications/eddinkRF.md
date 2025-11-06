@@ -269,14 +269,15 @@ This grant focuses on the foundational RetroFunding Infra that is needed for the
 | Number | Deliverable | Specification |
 | -----: | ----------- | ------------- |
 | **0a.** | License | Apache 2.0 |
-| **0b.** | Documentation | We will provide both **inline documentation** of the code and a basic **tutorial** that explains how developers can set up the ink! development environment, deploy contracts to testnet, and interact with the project registry and round creation functionality. |
+| **0b.** | Documentation | We will provide both **inline documentation** of the code and a basic **tutorial** that explains how developers can set up the ink! development environment, deploy contracts to testnet, and interact with the project registry, round creation, voter management, and voting functionality. |
 | **0c.** | Testing and Testing Guide | Core smart contract functions will be fully covered by comprehensive unit tests (>80% coverage) to ensure functionality and robustness. In the guide, we will describe how to run these tests using cargo-contract. |
 | **0d.** | Docker | We will provide a Dockerfile that can be used to test all the smart contract functionality delivered with this milestone, including a local substrate node with contracts pallet. |
 | 1. | ink! Smart Contract: Project Registry | We will create an ink! smart contract that manages project registration, GitHub verification status, and metadata storage (IPFS hashes). Functions include: `register_project()`, `verify_github()`, `update_metadata()`, `get_project_details()`. |
-| 2. | ink! Smart Contract: Round Manager | We will create an ink! smart contract for funding round creation and management. Functions include: `create_round()`, `add_eligible_project()`, `set_badge_holders()`, `finalize_round()`. |
-| 3. | ink! Smart Contract: Wallet Metadata | We will create an ink! smart contract to manage badge holder credentials and verification status. Functions include: `register_badge_holder()`, `verify_identity()`, `get_badge_holder_status()`. |
-| 4. | Contract Integration Tests | We will deliver comprehensive integration tests demonstrating the interaction between Project Registry, Round Manager, and Wallet Metadata contracts. |
-| 5. | Technical Specification Document | We will provide detailed specification of all contract interfaces, data structures, and integration patterns for future development phases. |
+| 2. | ink! Smart Contract: Round Manager | We will create an ink! smart contract for funding round creation and management. Functions include: `create_round()`, `add_eligible_project()`, `set_badge_holders()`, `link_round_votes()`, `finalize_round()`. |
+| 3. | ink! Smart Contract: Round Votes | We will create an ink! smart contract that manages voter lists and vote submissions linked to each round, aligned with the `RoundVotes` model. Functions include: `add_voter(AccountId)`, `vote(AccountId, ProjectId)`. |
+| 4. | ink! Smart Contract: Wallet Metadata | We will create an ink! smart contract to manage badge holder credentials and verification status. Functions include: `register_badge_holder()`, `verify_identity()`, `get_badge_holder_status()`. |
+| 5. | Contract Integration Tests | We will deliver comprehensive integration tests demonstrating the interaction between Project Registry, Round Manager, Round Votes, and Wallet Metadata contracts. |
+| 6. | Technical Specification Document | We will provide detailed specification of all contract interfaces, data structures, and integration patterns for future development phases. |
 
 **Additional Success Criteria:**
 - Specifications approved by project stakeholders
@@ -299,9 +300,9 @@ This grant focuses on the foundational RetroFunding Infra that is needed for the
 | **0b.** | Documentation | We will provide **inline documentation** of the code and a comprehensive **user guide** explaining how to connect wallets, register projects, create funding rounds, and participate as a badge holder. |
 | **0c.** | Testing and Testing Guide | Frontend components and backend API endpoints will be covered by unit tests (Jest/React Testing Library) and integration tests. We will describe how to run these tests in the guide. |
 | **0d.** | Docker | We will provide Docker Compose configuration that spins up the complete stack (frontend, backend, database, local blockchain node) for testing. |
-| 1. | Backend API: User Management | We will implement a Node.js/PostgreSQL backend with REST API for user registration, wallet connection management, and project ownership tracking. Endpoints: `/api/auth/*`, `/api/users/*`. |
+| 1. | Backend API: Core Services | We will implement a Node.js/PostgreSQL backend with REST API for user registration, wallet connection management, project registry, rounds, voters, and voting. Endpoints: `POST /project/create`, `GET /project/:id`, `POST /round/create`, `GET /round/:id`, `POST /round/add_voters`, `POST /round/vote/:id`; analytics endpoints: `GET /analytics/project/:id/{metric}`, `GET /analytics/round/:id/{metric}`. |
 | 2. | Frontend: Authentication Flow | We will create React/Next.js components for wallet connection (Polkadot.js), optional email authentication, and session management with secure token handling. |
-| 3. | Frontend: Badge Holder Voting Interface | We will implement the voting UI where badge holders can view eligible projects, allocate funds, and submit their votes on-chain. Includes real-time validation and transaction status tracking. |
+| 3. | Frontend: Badge Holder Voting Interface | We will implement the voting UI where badge holders can view eligible projects and submit their votes on-chain via `RoundVotes` (interacting with `POST /round/vote/:id`). Includes real-time validation and transaction status tracking. |
 | 4. | Frontend: Project Dashboard | We will create project owner dashboards showing registration status, round participation, funding received, and GitHub verification workflow. |
 | 5. | Notification System | We will implement email and in-app notifications for round milestones (voting start, voting end, fund distribution) using a job queue system. |
 
@@ -327,7 +328,7 @@ This grant focuses on the foundational RetroFunding Infra that is needed for the
 | **0c.** | Testing and Testing Guide | End-to-end test suites covering complete user journeys (project registration → round creation → voting → fund distribution). Load testing results and performance benchmarks will be documented. |
 | **0d.** | Docker | We will provide production-ready Docker Compose configuration with all services, monitoring, and logging infrastructure. |
 | **0e.** | Article | We will publish an **article** on Medium/Polkadot Forum explaining: (1) How Eddink brings retroactive funding to ink! ecosystem, (2) Technical architecture and design decisions, (3) Tutorial for creating your first funding round, (4) Future roadmap and community governance plans. |
-| 1. | Analytics Dashboard | We will implement comprehensive analytics views showing: round statistics, project funding history, badge holder participation rates, platform-wide metrics, and trend analysis. |
+| 1. | Analytics Dashboard | We will implement comprehensive analytics views showing: round statistics, project funding history, badge holder participation rates, platform-wide metrics, and trend analysis, powered by the analytics API endpoints. |
 | 2. | Mainnet Deployment | We will deploy all smart contracts to Polkadot Asset Hub mainnet (or designated production testnet), with complete deployment documentation and contract addresses published. |
 | 3. | Backend Infrastructure | We will set up production backend services with PostgreSQL database, IPFS integration for metadata storage, indexing services for blockchain data, and API rate limiting. |
 | 4. | Monitoring & Observability | We will implement comprehensive monitoring using Prometheus/Grafana for system health, transaction tracking, error logging, and performance metrics. |
