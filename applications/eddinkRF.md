@@ -90,8 +90,11 @@ We designed the platform to evolve naturally as community capacity and data matu
 
 ```rust
 // Project Registry
+type ProjectId = u64;
+type RoundId = u64;
+type AccountId = u64;
 struct Project {
-    id: u64,
+    id: ProjectId,
     owner: AccountId,
     github_verification: bool,
     metadata_hash: Hash,  // IPFS link to full details
@@ -101,33 +104,46 @@ struct Project {
 
 // Funding Round
 struct Round {
-    id: u64,
+    id: RoundId,
+    round_votes_id: RoundVotesId
     admin: AccountId,
     total_funds: Balance,
     voting_start: Timestamp,
     voting_end: Timestamp,
-    eligible_projects: Vec<u64>,
+    eligible_projects: Vec<ProjectId>,
     badge_holders: Vec<AccountId>,
     status: RoundStatus,
 }
 
-// Vote Allocation
-struct VoteAllocation {
-    badge_holder: AccountId,
-    round_id: u64,
-    allocations: Vec<(u64, u128)>,  // (project_id, amount)
-    timestamp: Timestamp,
+enum Vote {
+    Voted(ProjectId),
+    Pending
 }
+impl Vote {
+    fn submit(ProjectId) -> VoteResult<()>
+}
+struct RoundVotes {
+    id: RoundVotesId,
+    round_id: RoundId,
+    votes: HashMap<AccountId, Vote>,
+    candidates: Vec<ProjectId>
+}
+impl RoundVotes {
+    fn add_voter(AccountId) -> RoundVotesResult<()>
+    fn vote(AccountId, ProjectId) -> RoundVotesResult<()>
+}
+
 ```
 
 **REST API Endpoints (Backend):**
-- `POST /api/projects` - Register new project
-- `GET /api/projects/:id` - Retrieve project details
-- `POST /api/rounds` - Create funding round
-- `GET /api/rounds/:id` - Get round details and participants
-- `POST /api/votes` - Submit badge holder vote
-- `GET /api/analytics/project/:id` - Project impact metrics
-- `GET /api/analytics/round/:id` - Round statistics
+- `POST /project/create` - Register new project
+- `GET /project/:id` - Retrieve project details
+- `POST /round/create` - Create funding round
+- `GET /round/:id` - Get round details and participants
+- `POST /round/add_voters` - Adds voters to the round
+- `POST /round/vote/:id` - Submit badge holder vote
+- `GET /analytics/project/:id/{metric}` - Project impact metrics
+- `GET /analytics/round/:id/{metric}` - Round statistics
 
 ### What This Project Will NOT Provide
 
